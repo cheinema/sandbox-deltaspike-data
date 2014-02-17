@@ -15,6 +15,7 @@
         <version.arquillian>1.1.2.Final</version.arquillian>
         <version.deltaspike>0.5</version.deltaspike>
         <version.junit>4.11</version.junit>
+        <version.mockito>1.9.5</version.mockito>
         <version.shrinkwrap.descriptors>2.0.0-alpha-5</version.shrinkwrap.descriptors>
         <version.shrinkwrap.resolvers>2.0.2</version.shrinkwrap.resolvers>
         <version.wildfly>8.0.0.Final</version.wildfly>
@@ -113,6 +114,12 @@
             <artifactId>shrinkwrap-resolver-depchain</artifactId>
             <scope>test</scope>
             <type>pom</type>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>${version.mockito}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
     <dependencyManagement>
