@@ -17,7 +17,7 @@
         <version.junit>4.11</version.junit>
         <version.shrinkwrap.descriptors>2.0.0-alpha-5</version.shrinkwrap.descriptors>
         <version.shrinkwrap.resolvers>2.0.2</version.shrinkwrap.resolvers>
-        <version.wildfly>8.0.0.CR1</version.wildfly>
+        <version.wildfly>8.0.0.Final</version.wildfly>
     </properties>
     <build>
         <defaultGoal>clean install</defaultGoal>
