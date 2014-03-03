@@ -29,13 +29,7 @@
                 </configuration>
             </plugin>
             <plugin>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.16</version>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
-                <version>2.16</version>
                 <configuration>
                     <skipTests>false</skipTests>
                 </configuration>
@@ -46,7 +40,7 @@
                             <goal>integration-test</goal>
                         </goals>
                         <configuration>
-                            <redirectTestOutputToFile>true</redirectTestOutputToFile>
+                            <redirectTestOutputToFile>false</redirectTestOutputToFile>
                         </configuration>
                     </execution>
                     <execution>
@@ -58,6 +52,22 @@
                 </executions>
             </plugin>
         </plugins>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <version>2.8</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-failsafe-plugin</artifactId>
+                    <version>2.16</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>2.16</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
     </build>
     <dependencies>
         <dependency>
@@ -133,18 +143,60 @@
     </dependencyManagement>
     <profiles>
         <profile>
-            <id>wildfly-8-remote</id>
+            <id>wildfly-managed-8</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
+            <properties>
+                <wildfly.base>${project.build.directory}</wildfly.base>
+                <wildfly.home>${wildfly.base}/wildfly-${version.wildfly}</wildfly.home>
+            </properties>
             <dependencies>
                 <dependency>
                     <groupId>org.wildfly</groupId>
-                    <artifactId>wildfly-arquillian-container-remote</artifactId>
+                    <artifactId>wildfly-arquillian-container-managed</artifactId>
                     <version>${version.wildfly}</version>
                     <scope>test</scope>
                 </dependency>
             </dependencies>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>unpack-wildfly</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>unpack</goal>
+                                </goals>
+                                <configuration>
+                                    <artifactItems>
+                                        <artifactItem>
+                                            <groupId>org.wildfly</groupId>
+                                            <artifactId>wildfly-dist</artifactId>
+                                            <version>${version.wildfly}</version>
+                                            <type>zip</type>
+                                            <outputDirectory>${wildfly.base}</outputDirectory>
+                                            <overWrite>false</overWrite>
+                                        </artifactItem>
+                                    </artifactItems>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-failsafe-plugin</artifactId>
+                        <configuration>
+                            <systemPropertyVariables>
+                                <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
+                                <jboss.home>${wildfly.home}</jboss.home>
+                            </systemPropertyVariables>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
         </profile>
     </profiles>
 </project>
